@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  # 1. TENSORFLOW SERVING
+  tf_serving:
+    image: tensorflow/serving
+    container_name: tf_serving_potato
+    ports:
+      # Expose le port REST du serveur de modèle
+      - "8501:8501"
+    volumes:
+      # Lie le SavedModel local au dossier de modèles dans le conteneur TF Serving
+      - ./tf_serving_model:/models
+    environment:
+      # Nom du modèle utilisé dans l'URL de FastAPI
+      - MODEL_NAME=potato_disease_model
+      - MODEL_BASE_PATH=/models
+    restart: always
+
+  # 2. FASTAPI CLIENT
+  fastapi_client:
+    # Construit l'image à partir de votre Dockerfile (qui utilise Python 3.12)
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_client_potato
+    ports:
+      # Expose le port de l'API pour l'application React/client
+      - "8000:8000"
+    # Attend que le serveur de modèle démarre
+    depends_on:
+      - tf_serving
+    restart: always

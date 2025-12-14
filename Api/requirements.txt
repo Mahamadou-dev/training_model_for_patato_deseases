@@ -1,0 +1,10 @@
+starlette
+# requests # Retiré (plus besoin pour la requête externe)
+tensorflow==2.20.0  # Essentiel pour le chargement du modèle
+fastapi==0.124.2
+uvicorn
+python-multipart
+pillow
+# tensorflow-serving-api==2.19.1 # Retiré (dépendance TF Serving)
+matplotlib
+numpy
